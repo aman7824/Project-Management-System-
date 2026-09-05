@@ -642,7 +642,8 @@ Potential improvements include:
 
 ## 📸 Screenshots
 
-Add application screenshots here to showcase the UI.
+<img src="Screenshot/<img width="1014" height="888" alt="FinancialDetails" src="https://github.com/user-attachments/assets/56205329-5231-48a0-bd7e-985bbc21e2b1" />
+" width="600"/>
 
 ### Dashboard
 
