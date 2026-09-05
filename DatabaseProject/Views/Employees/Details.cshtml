@@ -1,0 +1,84 @@
+
+@model DatabaseProject.Models.Employee
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<h1><i class="bi bi-person"></i> Employee Details</h1>
+<hr />
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Worker ID:</dt>
+            <dd class="col-sm-9">@Model.WorkerID</dd>
+
+            <dt class="col-sm-3">Full Name:</dt>
+            <dd class="col-sm-9">@Model.FullName</dd>
+
+            <dt class="col-sm-3">Username:</dt>
+            <dd class="col-sm-9">@Model.Username</dd>
+
+            <dt class="col-sm-3">Email:</dt>
+            <dd class="col-sm-9">
+                <a href="mailto:@Model.Email">@Model.Email</a>
+            </dd>
+
+            <dt class="col-sm-3">Phone Number:</dt>
+            <dd class="col-sm-9">@(Model.PhoneNumber ?? "N/A")</dd>
+
+            <dt class="col-sm-3">Address:</dt>
+            <dd class="col-sm-9">@(Model.Address ?? "N/A")</dd>
+
+            <dt class="col-sm-3">Employee Type:</dt>
+            <dd class="col-sm-9">
+                @if (Model.EmployeeType == 'F')
+                {
+                    <span class="badge bg-primary">Full-Time</span>
+                }
+                else if (Model.EmployeeType == 'H')
+                {
+                    <span class="badge bg-info">Hourly</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">N/A</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3">Created Date:</dt>
+            <dd class="col-sm-9">@(Model.CreateDate?.ToString("MM/dd/yyyy HH:mm:ss") ?? "N/A")</dd>
+
+            <dt class="col-sm-3">Last Updated:</dt>
+            <dd class="col-sm-9">@(Model.UpdateDate?.ToString("MM/dd/yyyy HH:mm:ss") ?? "N/A")</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.WorkerID" class="btn btn-warning">
+        <i class="bi bi-pencil"></i> Edit
+    </a>
+    <a asp-action="Delete" asp-route-id="@Model.WorkerID" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Delete
+    </a>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
+</div>

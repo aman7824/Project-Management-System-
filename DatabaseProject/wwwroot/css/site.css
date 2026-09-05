@@ -1,0 +1,66 @@
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+}
+
+/* Gradient Backgrounds */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+}
+
+/* Gradient Borders */
+.border-gradient-primary {
+    border: 3px solid transparent;
+    background-image: linear-gradient(white, white), linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+}
+
+.border-gradient-info {
+    border: 3px solid transparent;
+    background-image: linear-gradient(white, white), linear-gradient(135deg, #0dcaf0 0%, #0a58ca 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+}
+
+/* Hover Effects */
+.hover-lift {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+.list-group-item-action:hover {
+    background-color: #f8f9fa;
+}
+
+/* Custom Colors */
+.text-purple {
+    color: #6f42c1;
+}

@@ -1,0 +1,75 @@
+﻿
+@model DatabaseProject.Models.Leave
+@{
+    ViewData["Title"] = "Request Leave";
+}
+
+<h1><i class="bi bi-calendar-plus"></i> Request Leave (HR Module)</h1>
+<hr />
+
+<div class="alert alert-warning">
+    <strong><i class="bi bi-database"></i> Using Stored Procedure:</strong> <code>sp_HR_RequestLeave</code>
+    <ul class="mb-0 mt-2">
+        <li>Validates that end date is after start date</li>
+        <li>Only Full-Time employees can request leave</li>
+        <li>Automatically calculates total leave days</li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            
+            <div class="mb-3">
+                <label asp-for="WorkerID" class="form-label"></label>
+                <select asp-for="WorkerID" asp-items="ViewBag.EmployeeList" class="form-select">
+                    <option value="">-- Select Full-Time Employee --</option>
+                </select>
+                <span asp-validation-for="WorkerID" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="LeaveType" class="form-label"></label>
+                <select asp-for="LeaveType" class="form-select">
+                    <option value="">-- Select Leave Type --</option>
+                    <option value="Vacation">Vacation</option>
+                    <option value="Maternity">Maternity</option>
+                    <option value="Paternity">Paternity</option>
+                    <option value="Parental">Parental</option>
+                </select>
+                <span asp-validation-for="LeaveType" class="text-danger"></span>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="StartDate" class="form-label"></label>
+                    <input asp-for="StartDate" type="date" class="form-control" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EndDate" class="form-label"></label>
+                    <input asp-for="EndDate" type="date" class="form-control" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Submit Request
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+

@@ -1,0 +1,48 @@
+
+@model DatabaseProject.Models.Team
+@{
+    ViewData["Title"] = "Edit Team";
+}
+
+<h1><i class="bi bi-pencil"></i> Edit Team</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="TeamID" />
+            <input type="hidden" asp-for="CreateDate" />
+            
+            <div class="mb-3">
+                <label asp-for="TeamName" class="form-label"></label>
+                <input asp-for="TeamName" class="form-control" />
+                <span asp-validation-for="TeamName" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="ManagerID" class="form-label"></label>
+                <select asp-for="ManagerID" asp-items="ViewBag.EmployeeList" class="form-select">
+                    <option value="">-- Select Manager (Optional) --</option>
+                </select>
+                <span asp-validation-for="ManagerID" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Save Changes
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+

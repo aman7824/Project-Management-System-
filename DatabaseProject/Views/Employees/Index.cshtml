@@ -1,0 +1,133 @@
+@model IEnumerable<DatabaseProject.Models.Employee>
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1><i class="bi bi-people"></i> Employees</h1>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add New Employee
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Search and Filter Form -->
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-5">
+                <label for="searchTerm" class="form-label">Search</label>
+                <input type="text" class="form-control" id="searchTerm" name="searchTerm" 
+                       value="@ViewBag.SearchTerm" placeholder="Search by name, username, or email...">
+            </div>
+            <div class="col-md-3">
+                <label for="filterType" class="form-label">Employee Type</label>
+                <select class="form-select" id="filterType" name="filterType">
+                    <option value="">All Types</option>
+                    <option value="F" selected="@(ViewBag.FilterType == "F")">Full-Time</option>
+                    <option value="H" selected="@(ViewBag.FilterType == "H")">Hourly</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <a asp-action="Index" class="btn btn-secondary w-100">
+                    <i class="bi bi-x-circle"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in Model)
+                {
+                    <tr>
+                        <td>@employee.WorkerID</td>
+                        <td>@employee.FullName</td>
+                        <td>@employee.Username</td>
+                        <td>@employee.Email</td>
+                        <td>@(employee.PhoneNumber ?? "N/A")</td>
+                        <td>
+                            @if (employee.EmployeeType == 'F')
+                            {
+                                <span class="badge bg-primary">Full-Time</span>
+                            }
+                            else if (employee.EmployeeType == 'H')
+                            {
+                                <span class="badge bg-info">Hourly</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">N/A</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@employee.WorkerID" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@employee.WorkerID" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@employee.WorkerID" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Showing @Model.Count() employee(s)
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <h4><i class="bi bi-info-circle"></i> No employees found</h4>
+        @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+        {
+            <p>No results found for "@ViewBag.SearchTerm". Try a different search term.</p>
+        }
+        else
+        {
+            <p>Click "Add New Employee" to create your first employee record.</p>
+        }
+    </div>
+}

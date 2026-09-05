@@ -1,0 +1,95 @@
+
+@model DatabaseProject.Models.Comment
+@{
+    ViewData["Title"] = "Comment Details";
+}
+
+<h1><i class="bi bi-chat-left-text"></i> Comment Details</h1>
+<hr />
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+        <button type="button"="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">@(Model.CommentTitle ?? "No Title")</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Comment ID:</dt>
+            <dd class="col-sm-9">@Model.CommentNumber</dd>
+
+            <dt class="col-sm-3">Employee:</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.EmployeeName))
+                {
+                    <a asp-controller="Employees" asp-action="Details" asp-route-id="@Model.WorkerID" class="text-decoration-none">
+                        <i class="bi bi-person-fill"></i> @Model.EmployeeName
+                    </a>
+                }
+                else
+                {
+                    <span class="text-muted">Not related to any employee</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3">Related Task:</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.AssignmentDescription))
+                {
+                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@Model.AssignmentID" class="text-decoration-none">
+                        <i class="bi bi-clipboard-check"></i> @Model.AssignmentDescription
+                    </a>
+                }
+                else
+                {
+                    <span class="text-muted">Not related to any task</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3">Comment:</dt>
+            <dd class="col-sm-9">
+                <div class="border p-3 rounded bg-light">
+                    @(Model.CommentText ?? "No comment text provided")
+                </div>
+            </dd>
+
+            <dt class="col-sm-3">Created Date:</dt>
+            <dd class="col-sm-9">@(Model.CreateDate?.ToString("MM/dd/yyyy HH:mm:ss") ?? "N/A")</dd>
+
+            <dt class="col-sm-3">Last Updated:</dt>
+            <dd class="col-sm-9">@(Model.UpdateDate?.ToString("MM/dd/yyyy HH:mm:ss") ?? "Never")</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.CommentNumber" class="btn btn-warning">
+        <i class="bi bi-pencil"></i> Edit
+    </a>
+    <a asp-action="Delete" asp-route-id="@Model.CommentNumber" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Delete
+    </a>
+    @if (Model.AssignmentID.HasValue)
+    {
+        <a asp-controller="Tasks" asp-action="Details" asp-route-id="@Model.AssignmentID" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Task
+        </a>
+    }
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
+</div>

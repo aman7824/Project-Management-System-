@@ -1,0 +1,292 @@
+@using System.Globalization
+@{
+    ViewData["Title"] = "Dashboard";
+    var turkishCulture = new CultureInfo("tr-TR");
+}
+
+<!-- Hero Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-gradient-primary text-white shadow-lg border-0">
+            <div class="card-body py-5">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-4 fw-bold mb-3">
+                            <i class="bi bi-kanban me-3"></i>Project Management System
+                        </h1>
+                        <p class="lead mb-0">
+                            Comprehensive enterprise project tracking with database-driven architecture
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end d-none d-md-block">
+                        <i class="bi bi-graph-up-arrow" style="font-size: 120px; opacity: 0.2;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <!-- Projects Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-primary shadow-sm h-100 hover-lift">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                        <i class="bi bi-folder-fill text-primary fs-3"></i>
+                    </div>
+                    <div class="text-end">
+                        <h2 class="display-5 fw-bold mb-0">@(ViewBag.TotalProjects ?? 0)</h2>
+                        <span class="badge bg-primary">Total</span>
+                    </div>
+                </div>
+                <h6 class="text-muted mb-2">Total Projects</h6>
+                <div class="progress mb-2" style="height: 6px;">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Projects Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-success shadow-sm h-100 hover-lift">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                        <i class="bi bi-check-circle-fill text-success fs-3"></i>
+                    </div>
+                    <div class="text-end">
+                        <h2 class="display-5 fw-bold mb-0">@(ViewBag.ActiveProjects ?? 0)</h2>
+                        <span class="badge bg-success">Active</span>
+                    </div>
+                </div>
+                <h6 class="text-muted mb-2">Active Projects</h6>
+                <div class="progress mb-2" style="height: 6px;">
+                    <div class="progress-bar bg-success" role="progressbar" 
+                         style="width: @(ViewBag.TotalProjects > 0 ? (ViewBag.ActiveProjects * 100.0 / ViewBag.TotalProjects) : 0)%"></div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Employees Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-info shadow-sm h-100 hover-lift">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                        <i class="bi bi-people-fill text-info fs-3"></i>
+                    </div>
+                    <div class="text-end">
+                        <h2 class="display-5 fw-bold mb-0">@(ViewBag.TotalEmployees ?? 0)</h2>
+                        <span class="badge bg-info">Staff</span>
+                    </div>
+                </div>
+                <h6 class="text-muted mb-2">Employees</h6>
+                <div class="progress mb-2" style="height: 6px;">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tasks Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-warning shadow-sm h-100 hover-lift">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                        <i class="bi bi-clipboard-check-fill text-warning fs-3"></i>
+                    </div>
+                    <div class="text-end">
+                        <h2 class="display-5 fw-bold mb-0">@ViewBag.TotalTasks</h2>
+                        <span class="badge bg-warning text-dark">Total</span>
+                    </div>
+                </div>
+                <h6 class="text-muted mb-2">Total Tasks</h6>
+                <div class="progress mb-2" style="height: 6px;">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content Row -->
+<div class="row g-4 mb-4">
+    <!-- Quick Actions -->
+    <div class="col-lg-6  ">
+        <div class="card border-info mb-3 shadow-sm h-100">
+            <div class="card-header bg-white border-0 pt-4 pb-3">
+                <h5 class="mb-0">
+                    <i class="bi bi-lightning-charge-fill text-primary me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <a asp-controller="Projects" asp-action="Create" class="btn btn-outline-primary w-100 py-3 text-start">
+                            <i class="bi bi-plus-circle-fill me-2"></i>
+                            <div class="d-inline-block">
+                                <div class="fw-semibold">New Project</div>
+                                <small class="text-muted">Create project</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a asp-controller="Employees" asp-action="Create" class="btn btn-outline-success w-100 py-3 text-start">
+                            <i class="bi bi-person-plus-fill me-2"></i>
+                            <div class="d-inline-block">
+                                <div class="fw-semibold">Add Employee</div>
+                                <small class="text-muted">Register staff</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a asp-controller="Teams" asp-action="Create" class="btn btn-outline-info w-100 py-3 text-start">
+                            <i class="bi bi-diagram-3-fill me-2"></i>
+                            <div class="d-inline-block">
+                                <div class="fw-semibold">Create Team</div>
+                                <small class="text-muted">Build groups</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a asp-controller="Tasks" asp-action="Create" class="btn btn-outline-warning w-100 py-3 text-start">
+                            <i class="bi bi-list-check me-2"></i>
+                            <div class="d-inline-block">
+                                <div class="fw-semibold">Assign Task</div>
+                                <small class="text-muted">Delegate work</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a asp-controller="Leaves" asp-action="Create" class="btn btn-outline-danger w-100 py-3 text-start">
+                            <i class="bi bi-calendar-x-fill me-2"></i>
+                            <div class="d-inline-block">
+                                <div class="fw-semibold">Request Leave</div>
+                                <small class="text-muted">Time off</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a asp-controller="Invoices" asp-action="Create" class="btn btn-outline-secondary w-100 py-3 text-start">
+                            <i class="bi bi-receipt-cutoff me-2"></i>
+                            <div class="d-inline-block">
+                                <div class="fw-semibold">New Invoice</div>
+                                <small class="text-muted">Generate bill</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Modules -->
+    <div class="col-lg-6">
+        <div class="card border-info shadow-sm h-100">
+            <div class="card-header bg-white border-0 pt-4 pb-3">
+                <h5 class="mb-0">
+                    <i class="bi bi-grid-3x3-gap-fill text-success me-2"></i>System Modules
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a asp-controller="Projects" asp-action="Index" class="list-group-item list-group-item-action border-0 px-0 py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded bg-primary bg-opacity-10 p-2 me-3">
+                                <i class="bi bi-folder-fill text-primary fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Projects Management</h6>
+                                <small class="text-muted">Track project lifecycle & budgets</small>
+                            </div>
+                            <i class="bi bi-chevron-right text-muted"></i>
+                        </div>
+                    </a>
+                    <a asp-controller="Employees" asp-action="Index" class="list-group-item list-group-item-action border-0 px-0 py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded bg-success bg-opacity-10 p-2 me-3">
+                                <i class="bi bi-people-fill text-success fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Employee Management</h6>
+                                <small class="text-muted">Manage staff & assignments</small>
+                            </div>
+                            <i class="bi bi-chevron-right text-muted"></i>
+                        </div>
+                    </a>
+                    <a asp-controller="Teams" asp-action="Index" class="list-group-item list-group-item-action border-0 px-0 py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded bg-info bg-opacity-10 p-2 me-3">
+                                <i class="bi bi-diagram-3-fill text-info fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Teams & Collaboration</h6>
+                                <small class="text-muted">Team structure & members</small>
+                            </div>
+                            <i class="bi bi-chevron-right text-muted"></i>
+                        </div>
+                    </a>
+                    <a asp-controller="Tasks" asp-action="Index" class="list-group-item list-group-item-action border-0 px-0 py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded bg-warning bg-opacity-10 p-2 me-3">
+                                <i class="bi bi-list-check text-warning fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Task Assignments</h6>
+                                <small class="text-muted">Work delegation & tracking</small>
+                            </div>
+                            <i class="bi bi-chevron-right text-muted"></i>
+                        </div>
+                    </a>
+                    <a asp-controller="Profits" asp-action="Index" class="list-group-item list-group-item-action border-0 px-0 py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded bg-danger bg-opacity-10 p-2 me-3">
+                                <i class="bi bi-currency-exchange text-danger fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Financial Overview</h6>
+                                <small class="text-muted">Profits, expenses & budgets</small>
+                            </div>
+                            <i class="bi bi-chevron-right text-muted"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .hover-lift {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .list-group-item-action:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .text-purple {
+        color: #6f42c1;
+    }
+</style>

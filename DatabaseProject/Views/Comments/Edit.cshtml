@@ -1,0 +1,62 @@
+
+@model DatabaseProject.Models.Comment
+@{
+    ViewData["Title"] = "Edit Comment";
+}
+
+<h1><i class="bi bi-pencil"></i> Edit Comment</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="CommentNumber" />
+            <input type="hidden" asp-for="CreateDate" />
+            
+            <div class="mb-3">
+                <label asp-for="WorkerID" class="form-label"></label>
+                <select asp-for="WorkerID" asp-items="ViewBag.EmployeeList" class="form-select">
+                    <option value="">-- Select Employee --</option>
+                </select>
+                <span asp-validation-for="WorkerID" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="AssignmentID" class="form-label"></label>
+                <select asp-for="AssignmentID" asp-items="ViewBag.TaskList" class="form-select">
+                    <option value="">-- Select Task (Optional) --</option>
+                </select>
+                <span asp-validation-for="AssignmentID" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="CommentTitle" class="form-label"></label>
+                <input asp-for="CommentTitle" class="form-control" />
+                <span asp-validation-for="CommentTitle" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="CommentText" class="form-label"></label>
+                <textarea asp-for="CommentText" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="CommentText" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Save Changes
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+

@@ -1,0 +1,94 @@
+@model DatabaseProject.Models.Employee
+@{
+    ViewData["Title"] = "Edit Employee";
+}
+
+<h1><i class="bi bi-pencil"></i> Edit Employee</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="WorkerID" />
+            <input type="hidden" asp-for="CreateDate" />
+            <input type="hidden" asp-for="EmployeeType" />
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Username" class="form-label"></label>
+                    <input asp-for="Username" class="form-control" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" type="email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EmployeeType" class="form-label"></label>
+                    <div class="form-control-plaintext">
+                        @if (Model.EmployeeType == 'F')
+                        {
+                            <span class="badge bg-primary fs-6">Full-Time</span>
+                            <small class="text-muted d-block mt-1">Employee type cannot be changed</small>
+                        }
+                        else if (Model.EmployeeType == 'H')
+                        {
+                            <span class="badge bg-info fs-6">Hourly</span>
+                            <small class="text-muted d-block mt-1">Employee type cannot be changed</small>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary fs-6">Not Set</span>
+                            <small class="text-muted d-block mt-1">Employee type cannot be changed</small>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Address" class="form-label"></label>
+                <textarea asp-for="Address" class="form-control" rows="2"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Save Changes
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

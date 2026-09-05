@@ -1,0 +1,287 @@
+@model DatabaseProject.Models.Profit
+@{
+    ViewData["Title"] = "Financial Details";
+    var project = ViewBag.Project as DatabaseProject.Models.Project;
+    var profitClass = (Model.ProfitValue ?? 0) >= 0 ? "text-success" : "text-danger";
+    var budgetBadgeClass = Model.BudgetStatus switch
+    {
+        "Within Budget" => "bg-success",
+        "At Limit" => "bg-warning text-dark",
+        "Over Budget" => "bg-danger",
+        _ => "bg-secondary"
+    };
+}
+
+<h1><i class="bi bi-cash-coin"></i> Financial Details: @Model.ProjectName</h1>
+<hr />
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Project Info Card -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-folder"></i> Project Information</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Project:</dt>
+                    <dd class="col-sm-8"><strong>@Model.ProjectName</strong></dd>
+
+                    <dt class="col-sm-4">Project ID:</dt>
+                    <dd class="col-sm-8">@Model.ProjectID</dd>
+
+                    <dt class="col-sm-4">Status:</dt>
+                    <dd class="col-sm-8">
+                        @if (project != null)
+                        {
+                            @if (project.ProjectStatus == "Active")
+                            {
+                                <span class="badge bg-success">@project.ProjectStatus</span>
+                            }
+                            else if (project.ProjectStatus == "Completed")
+                            {
+                                <span class="badge bg-primary">@project.ProjectStatus</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@project.ProjectStatus</span>
+                            }
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">Budget:</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.ProjectBudget.HasValue)
+                        {
+                            <strong>@Model.ProjectBudget.Value.ToString("C")</strong>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not Set</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Deadline:</dt>
+                    <dd class="col-sm-8">@(project?.Deadline?.ToString("MM/dd/yyyy") ?? "Not Set")</dd>
+
+                    <dt class="col-sm-4">Finish Date:</dt>
+                    <dd class="col-sm-8">@(project?.FinishDate?.ToString("MM/dd/yyyy") ?? "Not Finished")</dd>
+
+                    <dt class="col-sm-4">Created:</dt>
+                    <dd class="col-sm-8">@(Model.CreateDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
+
+                    <dt class="col-sm-4">Last Updated:</dt>
+                    <dd class="col-sm-8">@(Model.UpdateDate?.ToString("MM/dd/yyyy HH:mm") ?? "Never")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Financial Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-arrow-up-circle"></i> Total Earnings</h6>
+                <h3 class="mb-0">@Model.TotalEarnings?.ToString("C")</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-arrow-down-circle"></i> Total Expenses</h6>
+                <h3 class="mb-0">@Model.TotalExpenses?.ToString("C")</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white @((Model.ProfitValue ?? 0) >= 0 ? "bg-primary" : "bg-warning")">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-wallet2"></i> Profit/Loss</h6>
+                <h3 class="mb-0 text-white">@Model.ProfitValue?.ToString("C")</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h6 class="card-title"><i class="bi bi-piggy-bank"></i> Budget Remaining</h6>
+                <h3 class="mb-0">
+                    @if (Model.BudgetRemaining.HasValue)
+                    {
+                        @Model.BudgetRemaining.Value.ToString("C")
+                    }
+                    else
+                    {
+                        <span>N/A</span>
+                    }
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Budget Status -->
+<div class="card mb-4">
+    <div class="card-header @budgetBadgeClass text-white">
+        <h5 class="mb-0"><i class="bi bi-bar-chart-line"></i> Budget Status: @Model.BudgetStatus</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.ProjectBudget.HasValue && Model.ProjectBudget.Value > 0)
+        {
+            var budgetUsedPercent = ((Model.TotalExpenses ?? 0) / Model.ProjectBudget.Value) * 100;
+            var cappedPercent = Math.Min(budgetUsedPercent, 100);
+            var progressBarClass = budgetUsedPercent switch
+            {
+                > 100 => "bg-danger",
+                >= 90 => "bg-warning",
+                _ => "bg-success"
+            };
+
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong>Budget Utilization:</strong>
+                    <span class="badge @progressBarClass fs-6">@budgetUsedPercent.ToString("F1")%</span>
+                </div>
+                <div class="progress" style="height: 40px; background-color: #e9ecef; border: 1px solid #dee2e6;">
+                    <div class="progress-bar @progressBarClass progress-bar-striped progress-bar-animated" 
+                         role="progressbar" 
+                         style="width: @(cappedPercent.ToString("F2", System.Globalization.CultureInfo.InvariantCulture))%; min-width: @(budgetUsedPercent < 5 ? "60px" : "0");" 
+                         aria-valuenow="@budgetUsedPercent" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                        <strong style="color: white; font-size: 16px; line-height: 40px;">@budgetUsedPercent.ToString("F1")%</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <small class="text-muted">Budget:</small>
+                    <div><strong>@Model.ProjectBudget.Value.ToString("C")</strong></div>
+                </div>
+                <div class="col-md-4">
+                    <small class="text-muted">Spent:</small>
+                    <div class="text-danger"><strong>@Model.TotalExpenses?.ToString("C")</strong></div>
+                </div>
+                <div class="col-md-4">
+                    <small class="text-muted">Remaining:</small>
+                    @if (Model.BudgetRemaining.HasValue)
+                    {
+                        var remainingClass = Model.BudgetRemaining >= 0 ? "text-success" : "text-danger";
+                        <div class="@remainingClass"><strong>@Model.BudgetRemaining.Value.ToString("C")</strong></div>
+                    }
+                </div>
+            </div>
+            
+            @if (budgetUsedPercent > 100)
+            {
+                <div class="alert alert-danger mt-3 mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <strong>Budget Overflow!</strong> This project has exceeded its budget by 
+                    <strong>@((Model.TotalExpenses ?? 0) - Model.ProjectBudget.Value).ToString("C")</strong>.
+                    The <code>trg_CheckBudgetOverflow</code> trigger will prevent further expenses.
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-warning mb-0">
+                <i class="bi bi-info-circle"></i> No budget has been set for this project. 
+                You can set a budget by editing the project details.
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Actions Info Card -->
+<div class="card mb-4 border-info">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0"><i class="bi bi-info-circle"></i> Manage Finances</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex align-items-start mb-3">
+                    <i class="bi bi-arrow-up-circle text-success fs-3 me-3"></i>
+                    <div>
+                        <h6 class="mb-1"><strong>Add Earnings</strong></h6>
+                        <p class="mb-2">To add earnings to this project, go to the Project Details page.</p>
+                        <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectID" class="btn btn-success btn-sm">
+                            <i class="bi bi-folder"></i> Go to Project Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-arrow-down-circle text-danger fs-3 me-3"></i>
+                    <div>
+                        <h6 class="mb-1"><strong>Add Expenses</strong></h6>
+                        <p class="mb-2">To add expenses to this project, go to the Project Details page.</p>
+                        <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectID" class="btn btn-danger btn-sm">
+                            <i class="bi bi-folder"></i> Go to Project Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Calculation Breakdown -->
+<div class="card mb-4">
+    <div class="card-header bg-dark text-white">
+        <h5 class="mb-0"><i class="bi bi-calculator"></i> Financial Breakdown</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th class="bg-light" style="width: 50%;">Total Earnings</th>
+                    <td class="text-success text-end"><h5 class="mb-0">+ @Model.TotalEarnings?.ToString("C")</h5></td>
+                </tr>
+                <tr>
+                    <th class="bg-light">Total Expenses</th>
+                    <td class="text-danger text-end"><h5 class="mb-0">- @Model.TotalExpenses?.ToString("C")</h5></td>
+                </tr>
+                <tr class="table-primary">
+                    <th><strong>Net Profit/Loss</strong></th>
+                    <td class="@profitClass text-end">
+                        <h4 class="mb-0"><strong>= @Model.ProfitValue?.ToString("C")</strong></h4>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Finances
+    </a>
+    <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.ProjectID" class="btn btn-primary">
+        <i class="bi bi-folder"></i> View Project
+    </a>
+</div>

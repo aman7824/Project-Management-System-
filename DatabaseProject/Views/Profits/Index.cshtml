@@ -1,0 +1,112 @@
+@model IEnumerable<DatabaseProject.Models.Profit>
+@{
+    ViewData["Title"] = "Financial Overview";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1><i class="bi bi-cash-coin"></i> Financial Overview</h1>
+    <a asp-controller="Projects" asp-action="Index" class="btn btn-primary">
+        <i class="bi bi-folder"></i> Back to Projects
+    </a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="row mb-4">
+        @{
+            var totalEarnings = Model.Sum(p => p.TotalEarnings ?? 0);
+            var totalExpenses = Model.Sum(p => p.TotalExpenses ?? 0);
+            var totalProfit = Model.Sum(p => p.ProfitValue ?? 0);
+            var withinBudget = Model.Count(p => p.BudgetStatus == "Within Budget");
+        }
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-arrow-up-circle"></i> Total Earnings</h6>
+                    <h3 class="mb-0">@totalEarnings.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-arrow-down-circle"></i> Total Expenses</h6>
+                    <h3 class="mb-0">@totalExpenses.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white @(totalProfit >= 0 ? "bg-primary" : "bg-warning text-dark")">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-wallet2"></i> Total Profit</h6>
+                    <h3 class="mb-0">@totalProfit.ToString("C")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-check-circle"></i> Within Budget</h6>
+                    <h3 class="mb-0">@withinBudget / @Model.Count()</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Project</th>
+                    <th>Earnings</th>
+                    <th>Expenses</th>
+                    <th>Profit/Loss</th>
+                    <th>Budget</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var profit in Model)
+                {
+                    var profitClass = (profit.ProfitValue ?? 0) >= 0 ? "text-success" : "text-danger";
+                    var budgetBadgeClass = profit.BudgetStatus switch
+                    {
+                        "Within Budget" => "bg-success",
+                        "At Limit" => "bg-warning text-dark",
+                        "Over Budget" => "bg-danger",
+                        _ => "bg-secondary"
+                    };
+
+                    <tr>
+                        <td><strong>@profit.ProjectName</strong></td>
+                        <td class="text-success">@profit.TotalEarnings?.ToString("C")</td>
+                        <td class="text-danger">@profit.TotalExpenses?.ToString("C")</td>
+                        <td class="@profitClass"><strong>@profit.ProfitValue?.ToString("C")</strong></td>
+                        <td>@profit.ProjectBudget?.ToString("C")</td>
+                        <td><span class="badge @budgetBadgeClass">@profit.BudgetStatus</span></td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@profit.ProfitID" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i> Details
+                            </a>
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@profit.ProjectID" class="btn btn-sm btn-primary">
+                                <i class="bi bi-folder"></i> Project
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <h4><i class="bi bi-info-circle"></i> No financial data available</h4>
+        <p>Financial tracking data will appear here once you create projects and add expenses.</p>
+        <a asp-controller="Projects" asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create First Project
+        </a>
+    </div>
+}

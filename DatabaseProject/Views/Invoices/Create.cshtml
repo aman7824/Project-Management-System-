@@ -1,0 +1,76 @@
+﻿
+@model DatabaseProject.Models.Invoice
+@{
+    ViewData["Title"] = "Generate Invoice";
+}
+
+<h1><i class="bi bi-receipt-cutoff"></i> Generate Invoice (Accounting Module)</h1>
+<hr />
+
+<div class="alert alert-warning">
+    <strong><i class="bi bi-database"></i> Using Stored Procedure:</strong> <code>sp_Accounting_GenerateInvoice</code>
+    <ul class="mb-0 mt-2">
+        <li>Automatically calculates wage based on hourly rate</li>
+        <li>Only works for Hourly employees</li>
+        <li>Retrieves rate from HourlyEmployee table</li>
+        <li>Creates invoice with calculated total</li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            
+            <div class="mb-3">
+                <label for="WorkerID" class="form-label">Hourly Employee</label>
+                <select asp-for="WorkerID" asp-items="ViewBag.HourlyEmployeeList" class="form-select">
+                    <option value="">-- Select Hourly Employee --</option>
+                </select>
+                <span asp-validation-for="WorkerID" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="HoursWorked" class="form-label">Hours Worked</label>
+                <input asp-for="HoursWorked" type="number" step="0.01" class="form-control" 
+                       placeholder="Enter hours worked (e.g., 40.5)" />
+                <span asp-validation-for="HoursWorked" class="text-danger"></span>
+                <div class="form-text">The stored procedure will calculate: HourlyRate × HoursWorked</div>
+            </div>
+            
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-receipt"></i> Generate Invoice
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="bi bi-lightbulb"></i> How It Works</h6>
+            </div>
+            <div class="card-body">
+                <ol class="mb-0">
+                    <li>Select an hourly employee</li>
+                    <li>Enter the number of hours worked</li>
+                    <li>Stored procedure retrieves their hourly rate</li>
+                    <li>Automatically calculates total wage</li>
+                    <li>Creates invoice record in database</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
+

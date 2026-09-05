@@ -1,0 +1,125 @@
+@model DatabaseProject.Models.TaskAssignment
+@{
+    ViewData["Title"] = "Task Assignment Details";
+}
+
+<h1><i class="bi bi-list-check"></i> Task Assignment Details</h1>
+<hr />
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Task Information</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Assignment ID:</dt>
+            <dd class="col-sm-9">@Model.AssignmentID</dd>
+
+            <dt class="col-sm-3">Team:</dt>
+            <dd class="col-sm-9"><span class="badge bg-info">@Model.TeamName</span></dd>
+
+            <dt class="col-sm-3">Project:</dt>
+            <dd class="col-sm-9"><span class="badge bg-primary">@Model.ProjectName</span></dd>
+
+            <dt class="col-sm-3">Task Description:</dt>
+            <dd class="col-sm-9">@(Model.TaskDescription ?? "No description provided")</dd>
+
+            <dt class="col-sm-3">Assignment Date:</dt>
+            <dd class="col-sm-9">@(Model.AssignmentDate?.ToString("MM/dd/yyyy HH:mm") ?? "N/A")</dd>
+
+            <dt class="col-sm-3">Deadline:</dt>
+            <dd class="col-sm-9">
+                @if (Model.Deadline.HasValue)
+                {
+                    var daysLeft = (Model.Deadline.Value - DateTime.Now).Days;
+                    @Model.Deadline?.ToString("MM/dd/yyyy")
+                    if (daysLeft < 0)
+                    {
+                        <span class="badge bg-danger ms-2">Overdue by @Math.Abs(daysLeft) days</span>
+                    }
+                    else if (daysLeft == 0)
+                    {
+                        <span class="badge bg-warning text-dark ms-2">Due Today!</span>
+                    }
+                    else if (daysLeft <= 3)
+                    {
+                        <span class="badge bg-warning text-dark ms-2">@daysLeft days left</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success ms-2">@daysLeft days left</span>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted">No deadline set</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<!-- Comments Section -->
+<div class="card mb-4">
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-chat-left-text"></i> Comments (@(ViewBag.Comments?.Count ?? 0))</h5>
+        <a asp-controller="Comments" asp-action="Create" asp-route-assignmentId="@Model.AssignmentID" class="btn btn-light btn-sm">
+            <i class="bi bi-plus-circle"></i> Add Comment
+        </a>
+    </div>
+    <div class="card-body">
+        @{
+            var comments = ViewBag.Comments as IEnumerable<Comment>;
+        }
+        @if (comments != null && comments.Any())
+        {
+            <div class="list-group">
+                @foreach (Comment comment in comments)
+                {
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">@comment.CommentTitle</h6>
+                            <small class="text-muted">@comment.CreateDate?.ToString("MM/dd/yyyy HH:mm")</small>
+                        </div>
+                        <p class="mb-1">@comment.CommentText</p>
+                        <small class="text-muted">
+                            <i class="bi bi-person"></i> @comment.EmployeeName
+                        </small>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted mb-0">No comments yet. Be the first to add one!</p>
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.AssignmentID" class="btn btn-warning">
+        <i class="bi bi-pencil"></i> Edit
+    </a>
+    <a asp-action="Delete" asp-route-id="@Model.AssignmentID" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Delete
+    </a>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
+</div>

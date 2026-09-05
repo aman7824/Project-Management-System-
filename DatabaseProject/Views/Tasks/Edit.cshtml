@@ -1,0 +1,77 @@
+
+@model DatabaseProject.Models.TaskAssignment
+@{
+    ViewData["Title"] = "Edit Task Assignment";
+}
+
+<h1><i class="bi bi-pencil"></i> Edit Task Assignment</h1>
+<hr />
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="AssignmentID" />
+            <input type="hidden" asp-for="AssignmentDate" />
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="TeamID" class="form-label"></label>
+                    <select asp-for="TeamID" asp-items="ViewBag.Teams" class="form-select">
+                        <option value="">-- Select Team --</option>
+                    </select>
+                    <span asp-validation-for="TeamID" class="text-danger"></span>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ProjectID" class="form-label"></label>
+                    <select asp-for="ProjectID" asp-items="ViewBag.Projects" class="form-select">
+                        <option value="">-- Select Project --</option>
+                    </select>
+                    <span asp-validation-for="ProjectID" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="TaskDescription" class="form-label"></label>
+                <textarea asp-for="TaskDescription" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="TaskDescription" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Deadline" class="form-label"></label>
+                <input asp-for="Deadline" type="date" class="form-control" />
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Save Changes
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
