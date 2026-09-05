@@ -642,52 +642,30 @@ Potential improvements include:
 
 ## 📸 Screenshots
 
-<img src="Screenshot/<img width="1014" height="888" alt="FinancialDetails" src="https://github.com/user-attachments/assets/56205329-5231-48a0-bd7e-985bbc21e2b1" />
-" width="600"/>
+<img width="1014" height="888" alt="FinancialDetails" src="https://github.com/user-attachments/assets/56205329-5231-48a0-bd7e-985bbc21e2b1" />
 
 ### Dashboard
 
-```text
-Add dashboard screenshot
-```
+<img width="1600" height="740" alt="HomeScreen" src="https://github.com/user-attachments/assets/7b62a6cd-8ed2-41bb-a645-ab282fd48908" />
+
 
 ### Project Management
 
-```text
-Add project management screenshot
-```
+<img width="1180" height="469" alt="Projects" src="https://github.com/user-attachments/assets/1cff242e-18db-4992-bd8f-a88b9b09b923" />
+
 
 ### Team Management
 
-```text
-Add team management screenshot
-```
+<img width="918" height="288" alt="Teams" src="https://github.com/user-attachments/assets/e106501b-1d17-49ec-83dd-b05431d6a81d" />
+
 
 ### Task Assignment
-
-```text
-Add task assignment screenshot
-```
+<img width="910" height="301" alt="TaskAssignments" src="https://github.com/user-attachments/assets/28635ef2-aca8-4101-a057-0f004e168130" />
 
 ### Invoice Management
 
-```text
-Add invoice screenshot
-```
+<img width="1007" height="541" alt="Invoices" src="https://github.com/user-attachments/assets/f2ea4d34-2875-46a7-95b4-eea82ed6a6cb" />
 
-### Profit Tracking
-
-```text
-Add financial/profit screenshot
-```
-
-> Tip: Create a `Screenshots/` folder in the repository and reference images using relative paths.
-
-Example:
-
-```markdown
-![Dashboard](Screenshots/dashboard.png)
-```
 
 ---
 
